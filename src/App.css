@@ -1,0 +1,172 @@
+
+/* ---GLOBAL LAYOUT--- */
+.app {
+  min-height: 100vh;
+  background: #f8fafc;
+  color: #172033;
+}
+
+/* ---HEADER--- */
+.header {
+  height: 76px;
+  padding: 0 7%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: #ffffff;
+  border-bottom: 1px solid #e7ebf0;
+}
+
+.brand {
+  font-size: 25px;
+  font-weight: 750;
+  letter-spacing: -1px;
+  color: #243c71;
+}
+
+.version {
+  font-size: 13px;
+  color: #64748b;
+}
+
+/* ---MAIN CONTENT--- */
+.main {
+  max-width: 940px;
+  margin: 0 auto;
+  padding: 85px 24px;
+}
+
+.intro {
+  max-width: 720px;
+  margin-bottom: 50px;
+}
+
+.eyebrow {
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  color: #5271a8;
+}
+
+.intro h1 {
+  margin: 17px 0;
+  font-size: clamp(32px, 5vw, 49px);
+  line-height: 1.15;
+  font-weight: 750;
+  letter-spacing: -1.8px;
+}
+
+.intro p {
+  max-width: 610px;
+  font-size: 17px;
+  line-height: 1.8;
+  color: #64748b;
+}
+
+/* ---GENERATOR CARD--- */
+.generator {
+  padding: 38px;
+  border: 1px solid #e4e9f0;
+  border-radius: 16px;
+  background: #ffffff;
+  box-shadow: 0 12px 35px rgba(31, 51, 87, 0.04);
+}
+
+.generator h2 {
+  margin: 0 0 10px;
+  font-size: 23px;
+  letter-spacing: -0.5px;
+}
+
+.generator p {
+  margin: 0;
+  color: #64748b;
+  line-height: 1.7;
+}
+
+/* ---MOBILE--- */
+@media (max-width: 600px) {
+  .header {
+    padding: 0 22px;
+  }
+
+  .main {
+    padding: 55px 20px;
+  }
+
+  .generator {
+    padding: 25px;
+  }
+}
+
+
+/* ---DATASET FORM--- */
+.form-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 24px;
+  margin-top: 32px;
+  margin-bottom: 30px;
+}
+
+.form-field {
+  display: flex;
+  flex-direction: column;
+  gap: 9px;
+}
+
+.form-field label {
+  font-size: 14px;
+  font-weight: 650;
+}
+
+.form-field input,
+.form-field select {
+  width: 100%;
+  min-height: 46px;
+  padding: 10px 13px;
+  color: #172033;
+  background: #fff;
+  border: 1px solid #d8e0e9;
+  border-radius: 9px;
+}
+
+.form-field input:focus,
+.form-field select:focus {
+  outline: 2px solid #a8bce8;
+  border-color: #5271a8;
+}
+
+.form-field small {
+  color: #64748b;
+  font-size: 12px;
+  line-height: 1.5;
+}
+
+.generate-button {
+  width: 100%;
+  padding: 15px;
+  background: #243c71;
+  color: white;
+  border: 0;
+  border-radius: 10px;
+  font-weight: 650;
+  cursor: pointer;
+}
+
+.generate-button:hover {
+  background: #34548e;
+}
+
+.form-note {
+  margin-top: 13px !important;
+  font-size: 12px;
+  text-align: center;
+}
+
+@media (max-width: 600px) {
+  .form-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
