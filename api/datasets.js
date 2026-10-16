@@ -1,3 +1,5 @@
+import { createDownloadToken } from "../lib/downloadToken.js";
+import { checkPublicRateLimit } from "../lib/ratelimit.js";
 
 const API_BASE =
   "https://bhsim-api-rb1997-ongole-q76d.onrender.com";
@@ -36,7 +38,32 @@ export default async function handler(req, res) {
       detail: "Dataset service is not configured",
     });
   }
+// ---ENFORCE PUBLIC RATE LIMIT---
+try {
+  // Use the client address provided by Vercel.
+  // Never trust an arbitrary X-Forwarded-For header.
+  const visitorIp = req.headers["x-vercel-forwarded-for"];
 
+  if (typeof visitorIp !== "string" || !visitorIp.trim()) {
+    return res.status(503).json({
+      detail: "Unable to verify visitor identity",
+    });
+  }
+
+  const limit = await checkPublicRateLimit(visitorIp.trim());
+
+  if (!limit.allowed) {
+    return res.status(429).json({
+      detail: "Daily website generation limit reached. Try again tomorrow.",
+    });
+  }
+} catch (error) {
+  console.error("Public rate-limit check failed:", error.message);
+
+  return res.status(503).json({
+    detail: "Dataset generation is temporarily unavailable",
+  });
+}
   // ---FORWARD REQUEST TO BHSIM API---
   try {
     const response = await fetch(`${API_BASE}/v1/datasets`, {
@@ -55,6 +82,16 @@ export default async function handler(req, res) {
     });
 
     const result = await response.json();
+
+    // ---ATTACH DOWNLOAD TOKEN---
+    if (response.ok && result.dataset_id) {
+      const downloadToken = createDownloadToken(result.dataset_id);
+
+      return res.status(response.status).json({
+        ...result,
+        download_token: downloadToken,
+      });
+    }
 
     return res.status(response.status).json(result);
   } catch {
