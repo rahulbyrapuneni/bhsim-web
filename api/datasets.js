@@ -58,11 +58,10 @@ try {
     });
   }
 } catch (error) {
+  // ---SAFE PRODUCTION LOGGING---
   console.error("Public rate-limit check failed:", {
     name: error?.name,
-    message: error?.message,
     code: error?.code,
-    cause: error?.cause?.code,
   });
 
   return res.status(503).json({
