@@ -85,12 +85,19 @@ function App() {
       </header>
 
       <main className="main">
+        {/* ---HERO SECTION--- */}
         <div className="intro">
-          <span className="eyebrow">SYNTHETIC DATA PLATFORM</span>
-          <h1>Behavioral health data, ready to explore.</h1>
+          <span className="eyebrow">BHSim / SYNTHETIC DATA PLATFORM</span>
+
+          <h1>
+            Behavioral health data.
+            <span className="hero-accent"> Made simple.</span>
+          </h1>
+
           <p>
             Generate realistic, fictional behavioral health datasets
-            for analytics, software testing, and research.
+            for analytics, testing, and research.
+            No coding required.
           </p>
         </div>
 
