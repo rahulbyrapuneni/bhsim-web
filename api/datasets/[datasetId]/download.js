@@ -17,7 +17,7 @@ export default async function handler(req, res) {
     });
   }
 
-  // ---VALIDATE DATASET ID---
+  // ---VALIDATE DATASET ID AND DOWNLOAD TOKEN---
   const datasetId = req.query.datasetId;
   const token = req.query.token;
 
@@ -31,6 +31,15 @@ export default async function handler(req, res) {
     });
   }
 
+  // ---VALIDATE DOWNLOAD FORMAT---
+  const format = req.query.format ?? "sqlite";
+
+  if (format !== "sqlite" && format !== "csv") {
+    return res.status(400).json({
+      detail: "Invalid download format. Use sqlite or csv.",
+    });
+  }
+
   // ---CHECK API CONFIGURATION---
   const apiKey = process.env.BHSIM_API_KEY;
 
@@ -40,10 +49,10 @@ export default async function handler(req, res) {
     });
   }
 
-  // ---FETCH DATABASE FROM RENDER---
+  // ---FETCH DATASET FROM RENDER---
   try {
     const response = await fetch(
-      `${API_BASE}/v1/datasets/${datasetId}/download`,
+      `${API_BASE}/v1/datasets/${datasetId}/download?format=${format}`,
       {
         headers: {
           "X-API-Key": apiKey,
@@ -52,6 +61,7 @@ export default async function handler(req, res) {
       }
     );
 
+    // ---HANDLE BACKEND ERRORS---
     if (!response.ok) {
       return res.status(response.status).json({
         detail:
@@ -67,11 +77,22 @@ export default async function handler(req, res) {
       });
     }
 
-    // ---STREAM SQLITE FILE---
-    res.setHeader("Content-Type", "application/vnd.sqlite3");
+    // ---SET FILE TYPE---
+    const isCsv = format === "csv";
+
+    const contentType = isCsv
+      ? "application/zip"
+      : "application/vnd.sqlite3";
+
+    const filename = isCsv
+      ? `bhsim-${datasetId}-csv.zip`
+      : `bhsim-${datasetId}.db`;
+
+    // ---STREAM FILE TO USER---
+    res.setHeader("Content-Type", contentType);
     res.setHeader(
       "Content-Disposition",
-      `attachment; filename="bhsim-${datasetId}.db"`
+      `attachment; filename="${filename}"`
     );
     res.setHeader("Cache-Control", "private, no-store");
 
@@ -84,8 +105,12 @@ export default async function handler(req, res) {
 
       stream.pipe(res);
     });
+
   } catch (error) {
-    console.error("Dataset download failed:", error.message);
+    console.error("Dataset download failed:", {
+      name: error?.name,
+      code: error?.code,
+    });
 
     if (!res.headersSent) {
       return res.status(502).json({

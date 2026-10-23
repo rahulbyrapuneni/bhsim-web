@@ -104,8 +104,11 @@ function App() {
         <section className="generator">
           <h2>Configure your dataset</h2>
           <p>
-            Choose your dataset size and generate linked records
-            in a SQLite database.
+        <p>
+          Choose your dataset size and generate realistic,
+          interconnected behavioral health records.
+          Download your dataset as SQLite or CSV files.
+        </p>
           </p>
 
           <div className="form-grid">
@@ -206,26 +209,59 @@ function App() {
                 <strong>Processing time:</strong>{" "}
                 {result.performance?.total_processing_seconds ?? "N/A"} seconds
               </p>
-              <p>
-                <strong>Format:</strong> SQLite
-              </p>
-              <small>
+                {/* ---DATASET DOWNLOAD OPTIONS--- */}
+                <p>
+                  <strong>Available formats:</strong> SQLite and CSV
+                </p>
+
                 {result.download_token && (
-                <a
-                  className="generate-button"
-                  href={`/api/datasets/${result.dataset_id}/download?token=${encodeURIComponent(result.download_token)}`}
-                  download={`bhsim-${result.dataset_id}.db`}
-                  style={{
-                    display: "inline-block",
-                    marginTop: "16px",
-                    textAlign: "center",
-                    textDecoration: "none",
-                  }}
-                >
-                  Download SQLite database
-                </a>
-              )}
-              </small>
+                  <div
+                    style={{
+                      display: "flex",
+                      gap: "12px",
+                      flexWrap: "wrap",
+                      marginTop: "18px",
+                    }}
+                  >
+                    {/* ---SQLITE DOWNLOAD--- */}
+                    <a
+                      className="generate-button"
+                      href={`/api/datasets/${result.dataset_id}/download?token=${encodeURIComponent(
+                        result.download_token
+                      )}&format=sqlite`}
+                      download={`bhsim-${result.dataset_id}.db`}
+                      style={{
+                        display: "inline-block",
+                        textAlign: "center",
+                        textDecoration: "none",
+                      }}
+                    >
+                      Download SQLite (.db)
+                    </a>
+
+                    {/* ---CSV DOWNLOAD--- */}
+                    <a
+                      className="generate-button"
+                      href={`/api/datasets/${result.dataset_id}/download?token=${encodeURIComponent(
+                        result.download_token
+                      )}&format=csv`}
+                      download={`bhsim-${result.dataset_id}-csv.zip`}
+                      style={{
+                        display: "inline-block",
+                        textAlign: "center",
+                        textDecoration: "none",
+                      }}
+                    >
+                      Download CSV (.zip)
+                    </a>
+                  </div>
+                )}
+
+                <p style={{fontSize: "13px", color: "#64748b", marginTop: "12px"}}>
+                  Both formats contain the same generated dataset.
+                  CSV files are packaged into a ZIP archive.
+                </p>
+
             </div>
           )}
 
