@@ -388,7 +388,7 @@ function App() {
 
           {/* ---GENERATION LIMIT NOTICE--- */}
           <p className="form-note">
-            Limit: 2 generation attempts per visitor
+            Limit: 5 generation attempts per visitor
             per UTC day. Generated files are temporary.
           </p>
 
